@@ -1,66 +1,255 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# School Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+An open-source, multi-institution school management platform built with **Laravel 11**, **Inertia.js**, **React (TypeScript)**, and **Tailwind CSS**. Each institution gets its own branded workspace — logo, name, and primary color — with fully isolated data.
 
-## About Laravel
+> Powered by [Execudea](https://execudea.com)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Institutions & tenancy
+- Multi-institution support with per-tenant data isolation
+- Self-service institution registration
+- Custom branding per institution (name, logo, primary color)
+- Role-based access: Super Admin, Institution Admin, Teacher, Student
 
-## Learning Laravel
+### Students
+- Student profiles, enrollment, and class assignment
+- Guardian / parent contact details
+- Bulk import (CSV) and individual creation
+- Search, filter, and paginate by class, section, or status
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Teachers & Staff
+- Teacher profiles with subject and class assignments
+- Role and permission management
+- Activity-scoped to the teacher's institution
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Classes, Sections & Subjects
+- Create classes (grades), sections, and subjects
+- Assign teachers to subjects
+- Map students to a class + section
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Fees
+- Fee structure per class
+- Invoice generation
+- Payment recording and history
+- Outstanding balance tracking
 
-## Laravel Sponsors
+### Accounts
+- Financial transaction records
+- Basic ledger / reports per institution
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Dashboard
+- Quick stats: students, teachers, classes, outstanding fees
+- Scoped to the logged-in institution
 
-### Premium Partners
+### Authentication & Security
+- Laravel Breeze + Sanctum
+- Email verification, password reset
+- Session-based auth with CSRF protection
+- Per-institution data scoping on every query
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Frontend
+- React + TypeScript + Inertia
+- Tailwind CSS with the institution's primary color
+- Lucide icons, responsive layouts
+- SEO-optimized landing page
+
+---
+
+## Tech Stack
+
+| Layer       | Tech                                              |
+| ----------- | ------------------------------------------------- |
+| Backend     | PHP 8.2+, Laravel 11                              |
+| Frontend    | React 18, TypeScript, Inertia.js, Tailwind CSS    |
+| Build       | Vite                                              |
+| Auth        | Laravel Breeze, Sanctum                           |
+| DB          | MySQL / MariaDB (SQLite for local dev)            |
+| Routing     | Ziggy (route names shared to JS)                  |
+
+---
+
+## Requirements
+
+- PHP **8.2+** with extensions: `mbstring`, `openssl`, `pdo`, `tokenizer`, `xml`, `ctype`, `json`, `bcmath`, `fileinfo`
+- Composer 2.x
+- Node.js **18+** and npm
+- MySQL 5.7+ / MariaDB 10.3+ (or SQLite for quick start)
+
+---
+
+## Quick Start
+
+```bash
+# 1. Clone
+git clone https://github.com/<your-org>/school-management-system.git
+cd school-management-system
+
+# 2. PHP deps
+composer install
+
+# 3. JS deps
+npm install
+
+# 4. Environment
+cp .env.example .env
+php artisan key:generate
+
+# 5. Configure .env
+#    - APP_URL
+#    - DB_CONNECTION / DB_DATABASE / DB_USERNAME / DB_PASSWORD
+#    - MAIL_* (for password resets + verification emails)
+
+# 6. Database
+php artisan migrate --seed
+
+# 7. Storage symlink (for uploaded logos, etc.)
+php artisan storage:link
+
+# 8. Run it
+composer dev
+```
+
+`composer dev` starts the PHP server, queue worker, log tailer, and Vite concurrently. Visit **http://localhost:8000**.
+
+If you prefer separate terminals:
+
+```bash
+php artisan serve
+npm run dev
+```
+
+---
+
+## Default Accounts
+
+After `php artisan migrate --seed`, the following account is created:
+
+| Role         | Email                 | Password     |
+| ------------ | --------------------- | ------------ |
+| Super Admin  | `admin@example.com`   | `password`   |
+
+> Change the password on first login. Seeders are in `database/seeders/`.
+
+---
+
+## Creating an Institution
+
+1. Go to `/institutions/register` from the landing page.
+2. Provide institution name, admin email, and password.
+3. Log in → customize branding under **Settings**.
+4. Start adding classes, sections, teachers, and students.
+
+---
+
+## Project Structure
+
+```
+app/
+├── Http/Controllers/      # Controllers (Students, Teachers, Classes, Fees, ...)
+├── Models/                # Eloquent models
+└── Policies/              # Authorization
+
+resources/
+├── js/
+│   ├── Pages/             # Inertia React pages
+│   ├── Layouts/           # AppLayout, GuestLayout
+│   ├── components/        # Shared UI
+│   └── lib/               # Helpers
+├── css/                   # Tailwind entry
+└── views/                 # app.blade.php (Inertia root)
+
+routes/
+├── web.php                # Main routes
+└── auth.php               # Breeze auth routes
+
+database/
+├── migrations/
+└── seeders/
+
+public/img/                # Logo, hero image
+```
+
+---
+
+## Available Commands
+
+```bash
+# Dev
+composer dev              # All services concurrently
+php artisan serve         # PHP dev server
+npm run dev               # Vite dev server
+npm run build             # Production JS/CSS build
+
+# DB
+php artisan migrate
+php artisan migrate:fresh --seed
+php artisan db:seed
+
+# Code quality
+./vendor/bin/pint         # PHP formatter
+php artisan test          # PHPUnit tests
+
+# Caches
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan optimize:clear
+```
+
+---
+
+## Production Deployment
+
+See **[cPanel deploy guide](#cpanel-deployment)** below or use the standard Laravel deploy flow:
+
+```bash
+composer install --no-dev --optimize-autoloader
+npm ci && npm run build
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan migrate --force
+php artisan storage:link
+```
+
+Point your webserver document root to `public/`.
+
+### cPanel deployment
+
+1. Push the repo to GitHub/Bitbucket.
+2. cPanel → **Git Version Control** → clone the repo outside `public_html`.
+3. Point your domain's document root to `<repo>/public`.
+4. SSH in: run `composer install --no-dev`, set `.env`, `php artisan key:generate`, `php artisan migrate --force`, `php artisan storage:link`.
+5. Commit `public/build/` (or run `npm run build` on the server if Node is available).
+6. Add a `.cpanel.yml` in the repo root for push-to-deploy.
+
+---
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Contributions are welcome! Please:
 
-## Code of Conduct
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feat/my-feature`)
+3. Commit with clear messages
+4. Run `./vendor/bin/pint` and `php artisan test`
+5. Open a Pull Request
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+For bug reports and feature requests, open an [issue](../../issues).
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Released under the **MIT License**. See [LICENSE](LICENSE) for details.
+
+---
+
+## Credits
+
+- Built on [Laravel](https://laravel.com), [Inertia.js](https://inertiajs.com), and [React](https://react.dev)
+- UI with [Tailwind CSS](https://tailwindcss.com) and [Lucide](https://lucide.dev) icons
+- Maintained by [Execudea](https://execudea.com)
