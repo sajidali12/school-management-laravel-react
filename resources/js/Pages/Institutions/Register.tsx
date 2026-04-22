@@ -6,7 +6,6 @@ import { FormEventHandler } from 'react';
 export default function RegisterInstitution() {
     const { data, setData, post, processing, errors } = useForm({
         institution_name: '',
-        slug: '',
         admin_name: '',
         admin_email: '',
         password: '',
@@ -17,13 +16,6 @@ export default function RegisterInstitution() {
         e.preventDefault();
         post(route('institutions.register'));
     };
-
-    const autoSlug = (name: string) =>
-        name
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-|-$/g, '')
-            .slice(0, 40);
 
     return (
         <>
@@ -57,46 +49,18 @@ export default function RegisterInstitution() {
                         </div>
 
                         <form onSubmit={submit} className="space-y-5">
-                            <div className="grid gap-5 sm:grid-cols-2">
-                                <div>
-                                    <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                                        Institution name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={data.institution_name}
-                                        onChange={(e) => {
-                                            setData('institution_name', e.target.value);
-                                            if (!data.slug) {
-                                                setData('slug', autoSlug(e.target.value));
-                                            }
-                                        }}
-                                        className="block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-                                        placeholder="Acme University"
-                                    />
-                                    <InputError message={errors.institution_name} className="mt-1.5" />
-                                </div>
-
-                                <div>
-                                    <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                                        URL slug
-                                    </label>
-                                    <div className="flex rounded-lg border border-slate-300 shadow-sm focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20">
-                                        <span className="rounded-l-lg bg-slate-50 px-3 py-2.5 text-sm text-slate-500">
-                                            /login?i=
-                                        </span>
-                                        <input
-                                            type="text"
-                                            value={data.slug}
-                                            onChange={(e) =>
-                                                setData('slug', e.target.value.toLowerCase())
-                                            }
-                                            className="w-full rounded-r-lg border-0 px-3 py-2.5 text-sm focus:outline-none focus:ring-0"
-                                            placeholder="acme"
-                                        />
-                                    </div>
-                                    <InputError message={errors.slug} className="mt-1.5" />
-                                </div>
+                            <div>
+                                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                                    Institution name
+                                </label>
+                                <input
+                                    type="text"
+                                    value={data.institution_name}
+                                    onChange={(e) => setData('institution_name', e.target.value)}
+                                    className="block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                                    placeholder="Acme University"
+                                />
+                                <InputError message={errors.institution_name} className="mt-1.5" />
                             </div>
 
                             <div className="border-t border-slate-200 pt-5">

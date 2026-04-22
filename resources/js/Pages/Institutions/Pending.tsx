@@ -4,7 +4,7 @@ import { Clock, GraduationCap } from 'lucide-react';
 export default function Pending({
     institution,
 }: {
-    institution: { name: string; slug: string; status: string };
+    institution: { name: string; status: string };
 }) {
     return (
         <>
@@ -26,13 +26,6 @@ export default function Pending({
                         is awaiting approval. You&apos;ll be able to sign in
                         once an administrator activates your account.
                     </p>
-
-                    <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-left text-sm">
-                        <p className="text-slate-500">Your sign-in URL</p>
-                        <p className="mt-1 font-mono text-slate-800">
-                            /login?i={institution.slug}
-                        </p>
-                    </div>
 
                     <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-400">
                         <GraduationCap className="h-4 w-4" />
