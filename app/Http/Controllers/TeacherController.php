@@ -15,6 +15,7 @@ class TeacherController extends Controller
         $statusFilter = $request->input('status');
 
         $teachers = Teacher::query()
+            ->with(['user:id,teacher_id'])
             ->when($search !== '', fn ($q) => $q->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
                     ->orWhere('last_name', 'like', "%{$search}%")

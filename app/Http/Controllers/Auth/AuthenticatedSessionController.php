@@ -33,10 +33,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $user = $request->user();
-        $fallback = $user && $user->isSuperAdmin()
-            ? route('admin.institutions.index', absolute: false)
-            : route('dashboard', absolute: false);
+        $user     = $request->user();
+        $fallback = $user ? $user->dashboardRoute() : route('dashboard', absolute: false);
 
         return redirect()->intended($fallback);
     }

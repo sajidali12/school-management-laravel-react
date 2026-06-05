@@ -1,6 +1,6 @@
 import { FormEvent } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import { Pencil, Plus, Search } from 'lucide-react';
+import { KeyRound, Pencil, Plus, Search, UserX } from 'lucide-react';
 import AppLayout from '@/Layouts/AppLayout';
 import DeleteDialog from '@/components/DeleteDialog';
 import Pagination from '@/components/Pagination';
@@ -82,7 +82,7 @@ export default function Index({ teachers, filters }: Props) {
                                 <TableHead>Designation</TableHead>
                                 <TableHead>Contact</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead className="w-24 text-right">Actions</TableHead>
+                                    <TableHead className="w-36 text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -112,6 +112,32 @@ export default function Index({ teachers, filters }: Props) {
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-1">
+                                            {t.user ? (
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-8 w-8 text-emerald-600 hover:text-destructive"
+                                                    title={`Login active — click to revoke`}
+                                                    onClick={() => {
+                                                        if (confirm(`Remove login account for ${t.full_name}?`)) {
+                                                            router.delete(`/teachers/${t.id}/account`);
+                                                        }
+                                                    }}
+                                                >
+                                                    <UserX className="h-4 w-4" />
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-8 w-8 text-muted-foreground hover:text-primary"
+                                                    title={t.email ? 'Create login account' : 'Add email to teacher first'}
+                                                    disabled={!t.email}
+                                                    onClick={() => router.post(`/teachers/${t.id}/account`)}
+                                                >
+                                                    <KeyRound className="h-4 w-4" />
+                                                </Button>
+                                            )}
                                             <Button asChild variant="ghost" size="icon" className="h-8 w-8">
                                                 <Link href={`/teachers/${t.id}/edit`}>
                                                     <Pencil className="h-4 w-4" />

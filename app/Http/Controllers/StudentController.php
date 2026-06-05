@@ -19,7 +19,7 @@ class StudentController extends Controller
         $statusFilter = $request->input('status');
 
         $students = Student::query()
-            ->with(['section:id,name,school_class_id', 'section.schoolClass:id,name'])
+            ->with(['section:id,name,school_class_id', 'section.schoolClass:id,name', 'user:id,student_id'])
             ->when($search !== '', fn ($q) => $q->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
                     ->orWhere('last_name', 'like', "%{$search}%")

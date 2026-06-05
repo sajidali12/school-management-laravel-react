@@ -14,9 +14,21 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StaffAttendanceController;
+use App\Http\Controllers\Student\AssignmentController as StudentAssignmentController;
+use App\Http\Controllers\Student\AttendanceController as StudentAttendancePortalController;
+use App\Http\Controllers\Student\LessonPlanController as StudentLessonPlanController;
+use App\Http\Controllers\StudentAttendanceController;
+use App\Http\Controllers\Teacher\AssignmentController as TeacherAssignmentController;
+use App\Http\Controllers\Teacher\LessonPlanController as TeacherLessonPlanController;
+use App\Http\Controllers\StudentPortalController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\Teacher\AttendanceController as TeacherAttendanceController;
+use App\Http\Controllers\Teacher\StudentAttendanceController as TeacherStudentAttendanceController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TeacherPortalController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserAccountController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -56,6 +68,16 @@ Route::middleware(['auth', 'verified', 'institution_active'])->group(function ()
     Route::resource('expense-categories', ExpenseCategoryController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('transactions', TransactionController::class)->except('show');
 
+    // Staff attendance (admin)
+    Route::get('/staff-attendance', [StaffAttendanceController::class, 'index'])->name('staff-attendance.index');
+    Route::post('/staff-attendance', [StaffAttendanceController::class, 'store'])->name('staff-attendance.store');
+    Route::put('/staff-attendance/{staffAttendance}', [StaffAttendanceController::class, 'update'])->name('staff-attendance.update');
+    Route::post('/staff-attendance/mark-all-present', [StaffAttendanceController::class, 'markAllPresent'])->name('staff-attendance.mark-all');
+
+    // Student attendance (admin view)
+    Route::get('/student-attendance', [StudentAttendanceController::class, 'index'])->name('student-attendance.index');
+    Route::patch('/student-attendance/records/{record}', [StudentAttendanceController::class, 'updateRecord'])->name('student-attendance.record.update');
+
     Route::middleware('institution_admin')->group(function () {
         Route::get('/settings', [InstitutionSettingsController::class, 'edit'])->name('settings.edit');
         Route::post('/settings/general', [InstitutionSettingsController::class, 'updateGeneral'])->name('settings.general');
@@ -67,6 +89,63 @@ Route::middleware(['auth', 'verified', 'institution_active'])->group(function ()
         Route::get('/settings/branding', [BrandingController::class, 'edit'])->name('branding.edit');
         Route::patch('/settings/branding', [BrandingController::class, 'update'])->name('branding.update');
     });
+});
+
+// Account creation (institution admin only)
+Route::middleware(['auth', 'verified', 'institution_active', 'institution_admin'])->group(function () {
+    Route::post('/teachers/{teacher}/account', [UserAccountController::class, 'createForTeacher'])->name('teachers.account.create');
+    Route::delete('/teachers/{teacher}/account', [UserAccountController::class, 'destroyForTeacher'])->name('teachers.account.destroy');
+    Route::post('/students/{student}/account', [UserAccountController::class, 'createForStudent'])->name('students.account.create');
+    Route::delete('/students/{student}/account', [UserAccountController::class, 'destroyForStudent'])->name('students.account.destroy');
+});
+
+// Credentials display (one-time, after account creation)
+Route::middleware(['auth', 'verified'])->get('/accounts/created', [UserAccountController::class, 'created'])->name('accounts.created');
+
+// Teacher portal
+Route::middleware(['auth', 'verified', 'institution_active', 'teacher'])->prefix('teacher')->name('teacher.')->group(function () {
+    Route::get('/dashboard', TeacherPortalController::class)->name('dashboard');
+    Route::get('/attendance', [TeacherAttendanceController::class, 'index'])->name('attendance.index');
+    Route::post('/attendance/check-in', [TeacherAttendanceController::class, 'checkIn'])->name('attendance.check-in');
+    Route::post('/attendance/check-out', [TeacherAttendanceController::class, 'checkOut'])->name('attendance.check-out');
+
+    Route::get('/student-attendance', [TeacherStudentAttendanceController::class, 'index'])->name('student-attendance.index');
+    Route::get('/student-attendance/take', [TeacherStudentAttendanceController::class, 'take'])->name('student-attendance.take');
+    Route::post('/student-attendance', [TeacherStudentAttendanceController::class, 'store'])->name('student-attendance.store');
+
+    Route::resource('lesson-plans', TeacherLessonPlanController::class)->except('show')
+        ->names([
+            'index'   => 'lesson-plans.index',
+            'create'  => 'lesson-plans.create',
+            'store'   => 'lesson-plans.store',
+            'edit'    => 'lesson-plans.edit',
+            'update'  => 'lesson-plans.update',
+            'destroy' => 'lesson-plans.destroy',
+        ]);
+
+    Route::resource('assignments', TeacherAssignmentController::class)->except('show')
+        ->names([
+            'index'   => 'assignments.index',
+            'create'  => 'assignments.create',
+            'store'   => 'assignments.store',
+            'edit'    => 'assignments.edit',
+            'update'  => 'assignments.update',
+            'destroy' => 'assignments.destroy',
+        ]);
+    Route::get('/assignments/{assignment}/submissions', [TeacherAssignmentController::class, 'submissions'])->name('assignments.submissions');
+    Route::patch('/assignment-submissions/{submission}/grade', [TeacherAssignmentController::class, 'gradeSubmission'])->name('assignments.grade');
+});
+
+// Student portal
+
+
+// Student portal
+Route::middleware(['auth', 'verified', 'institution_active', 'student'])->prefix('student')->name('student.')->group(function () {
+    Route::get('/dashboard', StudentPortalController::class)->name('dashboard');
+    Route::get('/attendance', [StudentAttendancePortalController::class, 'index'])->name('attendance.index');
+    Route::get('/lesson-plans', [StudentLessonPlanController::class, 'index'])->name('lesson-plans.index');
+    Route::get('/assignments', [StudentAssignmentController::class, 'index'])->name('assignments.index');
+    Route::post('/assignments/{assignment}/submit', [StudentAssignmentController::class, 'submit'])->name('assignments.submit');
 });
 
 Route::middleware(['auth', 'super_admin'])->prefix('admin')->name('admin.')->group(function () {

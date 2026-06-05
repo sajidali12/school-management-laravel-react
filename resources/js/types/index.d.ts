@@ -3,8 +3,10 @@ export interface User {
     name: string;
     email: string;
     email_verified_at?: string;
-    role?: 'super_admin' | 'institution_admin' | 'staff';
+    role?: 'super_admin' | 'institution_admin' | 'staff' | 'teacher' | 'student';
     institution_id?: number | null;
+    teacher_id?: number | null;
+    student_id?: number | null;
 }
 
 export interface InstitutionBrand {
@@ -81,6 +83,7 @@ export interface Teacher {
     address: string | null;
     status: 'active' | 'on_leave' | 'inactive';
     class_sections_count?: number;
+    user?: { id: number } | null;
 }
 
 export interface Subject {
@@ -208,4 +211,5 @@ export interface Student {
     address: string | null;
     admission_year: number | null;
     status: 'active' | 'graduated' | 'transferred' | 'dropped';
+    user?: { id: number } | null;
 }

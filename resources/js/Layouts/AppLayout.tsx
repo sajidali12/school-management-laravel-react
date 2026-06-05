@@ -11,6 +11,7 @@ import {
     Receipt,
     School,
     Settings,
+    UserCheck,
     UserSquare2,
     Users,
     Wallet,
@@ -57,6 +58,13 @@ const navGroups: NavGroup[] = [
             { label: 'Teachers', href: '/teachers', icon: <UserSquare2 className="h-4 w-4" />, match: 'teachers' },
             { label: 'Subjects', href: '/subjects', icon: <BookOpen className="h-4 w-4" />, match: 'subjects' },
             { label: 'Students', href: '/students', icon: <Users className="h-4 w-4" />, match: 'students' },
+        ],
+    },
+    {
+        heading: 'Attendance',
+        items: [
+            { label: 'Staff Attendance',   href: '/staff-attendance',   icon: <UserCheck className="h-4 w-4" />, match: 'staff-attendance' },
+            { label: 'Student Attendance', href: '/student-attendance', icon: <Users className="h-4 w-4" />,     match: 'student-attendance' },
         ],
     },
     {

@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Models\Concerns\BelongsToInstitution;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Teacher extends Model
 {
@@ -24,9 +26,26 @@ class Teacher extends Model
 
     protected $appends = ['full_name'];
 
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'teacher_id');
+    }
+
     public function classSections(): HasMany
     {
         return $this->hasMany(Section::class, 'class_teacher_id');
+    }
+
+    public function teachingSections(): BelongsToMany
+    {
+        return $this->belongsToMany(Section::class, 'section_subject_teacher')
+            ->withPivot('subject_id')
+            ->distinct();
+    }
+
+    public function taughtSubjects(): BelongsToMany
+    {
+        return $this->belongsToMany(Subject::class, 'section_subject_teacher')->distinct();
     }
 
     protected function fullName(): Attribute

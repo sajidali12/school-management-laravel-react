@@ -18,9 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'super_admin' => \App\Http\Middleware\EnsureSuperAdmin::class,
-            'institution_admin' => \App\Http\Middleware\EnsureInstitutionAdmin::class,
+            'super_admin'        => \App\Http\Middleware\EnsureSuperAdmin::class,
+            'institution_admin'  => \App\Http\Middleware\EnsureInstitutionAdmin::class,
             'institution_active' => \App\Http\Middleware\EnsureInstitutionActive::class,
+            'teacher'            => \App\Http\Middleware\EnsureTeacher::class,
+            'student'            => \App\Http\Middleware\EnsureStudent::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
